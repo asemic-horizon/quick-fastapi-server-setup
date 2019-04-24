@@ -1,14 +1,15 @@
 #!/bin/bash
 
-### Assumes: Ubuntu 18
+### Assumes: Ubuntu 16 or 18
 ### Instructions: 
 ###       Variable: gitserver - change to to github or gitlab cloning url
 ###       Variable: app_setup - if there's a setup shell script; otherwise pip install -r requirements.txt is run
 ###       Variable: senha     - default password for user apiserver (but password login will be disabled)
 
 gitserver="gitserver" # change this
-app_setup="app_setup.sh" # it's okay if this doesn't exist
+app_setup="app_setup.sh"
 senha="esta_senha"
+ip_addr="ip address"
 
 
 
@@ -57,7 +58,7 @@ After=network.target
 
 [Service]User=apiserver {
     listen 8000;
-    server_name 142.93.116.203;
+    server_name $ip_addr;
     location / {
             include proxy_params;
             proxy_pass http://unix:/home/apiserver/apiserver.sock;
@@ -79,7 +80,7 @@ echo Set up nginx for gunicorn
 cat > apiserver <<- EOM
 server {
     listen 8000;
-    server_name 142.93.116.203;
+    server_name $ip_addr;
     location / {
             include proxy_params;
             proxy_pass http://unix:/home/apiserver/apiserver.sock;
